@@ -13,7 +13,18 @@
 namespace socketpp {
 class Socket
 {
+public:
+	Socket(const int& protocol_family, const int& socket_type) : protocol_family(protocol_family)
+	{
+		// When using this library, use this constructor.
+		this->wsa_data = this->_initial_wsadata();
+		this->sock = this->_create_socket(protocol_family, socket_type);
+		this->address = {};
+	}
+
 private:
+	SOCKET sock;
+	WSADATA wsa_data;
 	sockaddr_in address;
 	int protocol_family;
 
