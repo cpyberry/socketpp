@@ -48,6 +48,14 @@ public:
 		}
 	}
 
+	void listen(const int& backlog) const
+	{
+		int result = ::listen(this->sock, backlog);
+		if (result == SOCKET_ERROR) {
+			winsock_error::throw_winsock_error();
+		}
+	}
+
 private:
 	SOCKET sock;
 	WSADATA wsa_data;
