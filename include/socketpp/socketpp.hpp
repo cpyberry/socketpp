@@ -72,6 +72,16 @@ public:
 		return std::make_pair(client, client_address);
 	}
 
+	template <class BufferType>
+	int send(const BufferType& buffer) const
+	{
+		int sended_size = ::send(this->sock, buffer.data(), buffer.size(), 0);
+		if (sended_size == SOCKET_ERROR) {
+			winsock_error::throw_winsock_error();
+		}
+		return sended_size;
+	}
+
 private:
 	SOCKET sock;
 	WSADATA wsa_data;
