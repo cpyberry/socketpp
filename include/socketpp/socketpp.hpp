@@ -2,6 +2,7 @@
 #define _SOCKETPP_HPP
 
 
+#include <array>
 #include <cstdint>
 #include <string_view>
 #include <utility>
@@ -80,6 +81,17 @@ public:
 			winsock_error::throw_winsock_error();
 		}
 		return sended_size;
+	}
+
+	template <int size>
+	std::array<char, size> recv() const
+	{
+		std::array<char, size> buffer;
+		int recved_size = ::recv(this->sock, buffer.data(), size, 0);
+		if (recved_size == SOCKET_ERROR) {
+			winsock_error::throw_winsock_error();
+		}
+		return buffer;
 	}
 
 private:
