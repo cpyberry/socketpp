@@ -28,6 +28,16 @@ public:
 		this->wsa_data = this->_initial_wsadata();
 	}
 
+	void bind(const std::string_view& ip_address, const std::uint16_t& port)
+	{
+		this->_set_address(ip_address, port);
+
+		int result = ::bind(this->sock, reinterpret_cast<sockaddr*>(&this->address), sizeof(this->address));
+		if (result == SOCKET_ERROR) {
+			winsock_error::throw_winsock_error();
+		}
+	}
+
 private:
 	SOCKET sock;
 	WSADATA wsa_data;
