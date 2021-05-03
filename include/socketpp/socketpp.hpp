@@ -22,6 +22,12 @@ public:
 		this->address = {};
 	}
 
+	Socket(SOCKET&& sock, sockaddr_in&& address) : sock(sock), address(address)
+	{
+		// when creating a client socket object, use this constructor.
+		this->wsa_data = this->_initial_wsadata();
+	}
+
 private:
 	SOCKET sock;
 	WSADATA wsa_data;
