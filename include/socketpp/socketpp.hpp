@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <string_view>
+#include <utility>
 
 #include <winsock2.h>
 
@@ -54,6 +55,21 @@ public:
 		if (result == SOCKET_ERROR) {
 			winsock_error::throw_winsock_error();
 		}
+	}
+
+	std::pair<Socket, sockaddr_in> accept() const
+	{
+		sockaddr_in client_address = {};
+		int size = static_cast<int>(sizeof(client_address));
+
+		SOCKET client_sock = ::accept(this->sock, reinterpret_cast<sockaddr*>(&client_address), &size);
+
+		if (client_sock == INVALID_SOCKET) {
+			winsock_error::throw_winsock_error();
+		}
+
+		Socket client(std::move(client_sock), std::move(client_address));
+		return std::make_pair(client, client_address);
 	}
 
 private:
