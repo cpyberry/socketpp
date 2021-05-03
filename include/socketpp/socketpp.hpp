@@ -20,6 +20,15 @@ private:
 		}
 		return sock;
 	}
+
+	SOCKET _create_socket(const int& protocol_family, const int& socket_type) const
+	{
+		SOCKET sock = ::socket(protocol_family, socket_type, 0);
+		if (sock == INVALID_SOCKET) {
+			winsock_error::throw_winsock_error();
+		}
+		return sock;
+	}
 };
 }  // namespace socketpp
 
