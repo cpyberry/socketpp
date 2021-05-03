@@ -22,12 +22,14 @@ public:
 		this->wsa_data = this->_initial_wsadata();
 		this->sock = this->_create_socket(protocol_family, socket_type);
 		this->address = {};
+		this->cleanuped = false;
 	}
 
 	Socket(SOCKET&& sock, sockaddr_in&& address) : sock(sock), address(address)
 	{
 		// when creating a client socket object, use this constructor.
 		this->wsa_data = this->_initial_wsadata();
+		this->cleanuped = false;
 	}
 
 	void bind(const std::string_view& ip_address, const std::uint16_t& port)
@@ -102,11 +104,21 @@ public:
 		}
 	}
 
+	void cleanup()
+	{
+		int result = ::WSACleanup();
+		if (result == SOCKET_ERROR) {
+			winsock_error::throw_winsock_error();
+		}
+		this->cleanuped = true;
+	}
+
 private:
 	SOCKET sock;
 	WSADATA wsa_data;
 	sockaddr_in address;
 	int protocol_family;
+	bool cleanuped;
 
 	WSADATA _initial_wsadata(const int& major_version = 2, const int& minor_version = 0) const
 	{
