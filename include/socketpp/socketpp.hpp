@@ -103,6 +103,22 @@ public:
 		return buffer;
 	}
 
+	template <int size>
+	std::pair<std::array<char, size>, sockaddr_in> recvfrom() const
+	{
+		std::array<char, size> buffer;
+		sockaddr_in client_address;
+		int address_size = static_cast<int>(sizeof(client_address));
+
+		int recved_size = ::recvfrom(
+			this->sock, buffer.data(), size, 0,
+			reinterpret_cast<sockaddr*>(&client_address), &address_size);
+		if (recved_size == SOCKET_ERROR) {
+			winsock_error::throw_winsock_error();
+		}
+		return std::make_pair(buffer, client_address);
+	}
+
 	void close() const
 	{
 		int result = ::closesocket(this->sock);
