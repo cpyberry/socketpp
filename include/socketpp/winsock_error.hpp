@@ -21,6 +21,7 @@ github: https://github.com/cpyberry
 
 namespace winsock_error {
 const std::map<const int, const std::string> ERROR_CONTENT = {
+	{10048, "Address already in use"}
 };
 
 
