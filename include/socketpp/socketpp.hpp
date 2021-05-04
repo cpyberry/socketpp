@@ -146,11 +146,18 @@ private:
 		return sock;
 	}
 
+	sockaddr_in _get_address(const std::string_view& ip_address, const std::uint16_t& port) const noexcept
+	{
+		sockaddr_in address;
+		address.sin_addr.S_un.S_addr = ::inet_addr(ip_address.data());
+		address.sin_family = this->protocol_family;
+		address.sin_port = ::htons(port);
+		return address;
+	}
+
 	void _set_address(const std::string_view& ip_address, const std::uint16_t& port) noexcept
 	{
-		this->address.sin_addr.S_un.S_addr = ::inet_addr(ip_address.data());
-		this->address.sin_family = this->protocol_family;
-		this->address.sin_port = ::htons(port);
+		this->address = std::move(this->_get_address(ip_address, port));
 	}
 };
 }  // namespace socketpp
