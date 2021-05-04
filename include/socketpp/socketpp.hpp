@@ -92,6 +92,21 @@ public:
 		return sended_size;
 	}
 
+	template <class BufferType>
+	int sendto(const BufferType& buffer, const std::string_view& ip_address, const std::uint16_t& port)
+	{
+		sockaddr_in address_to = this->_get_address(ip_address, port);
+		size_t size = sizeof(address_to);
+
+		int sended_size = ::sendto(
+			this->sock, buffer.data(), buffer.size(), 0,
+			reinterpret_cast<sockaddr*>(&address_to), size);
+		if (sended_size == SOCKET_ERROR) {
+			winsock_error::throw_winsock_error();
+		}
+		return sended_size;
+	}
+
 	template <int size>
 	std::array<char, size> recv() const
 	{
