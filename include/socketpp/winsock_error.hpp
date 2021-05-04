@@ -1,3 +1,13 @@
+/*
+Copyright 2021 cpyberry
+https://github.com/cpyberry/socketpp
+
+cpyberry
+email: cpyberry222@gmail.com
+github: https://github.com/cpyberry
+*/
+
+
 #ifndef _WINSOCK_ERROR_HPP
 #define _WINSOCK_ERROR_HPP
 
