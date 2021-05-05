@@ -15,6 +15,7 @@ github: https://github.com/cpyberry
 #include <array>
 #include <cstdint>
 #include <string_view>
+#include <type_traits>
 #include <utility>
 
 #include <winsock2.h>
@@ -75,6 +76,32 @@ public:
 		if (result == SOCKET_ERROR) {
 			winsock_error::throw_winsock_error();
 		}
+	}
+
+	template <class BufferType, class BufferPointerType = decltype(std::declval<BufferType>().data())>
+	auto setsockopt(const int& level, const int& optname, const BufferType& buffer) -> decltype(buffer.size(), void())
+	{
+		// If buffer argument is an instance of a class whose member functions are data() and size()
+		int result = ::setsockopt(this->sock, level, optname, buffer.data(), buffer.size());
+		if (result == SOCKET_ERROR) {
+			winsock_error::throw_winsock_error();
+		}
+	}
+
+	template <class BufferType>
+	auto setsockopt(const int& level, const int& optname, const BufferType& buffer) -> decltype(static_cast<char>(buffer), void())
+	{
+		// If the type specified in buffer can be converted to char.
+		int result = ::setsockopt(this->sock, level, optname, reinterpret_cast<const char*>(&buffer), sizeof(buffer));
+		if (result == SOCKET_ERROR) {
+			winsock_error::throw_winsock_error();
+		}
+	}
+
+	[[noreturn]] auto setsockopt(...) -> void
+	{
+		// If anything else is stored in the buffer argument.
+		throw std::invalid_argument("The buffer argument must be of type castable to const char* or an instance of a class with data and size member functions.");
 	}
 
 	std::pair<Socket, sockaddr_in> accept() const
