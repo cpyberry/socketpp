@@ -8,7 +8,7 @@ Simple and modern socket library for C++
 
 ## Usage
 
-When the server receives the message "cat" from the client and then sends the message "dog" to the client.
+When the server receives the message `{1, 2, 3, 4, 5}` from the client and then sends the message `{1, 2, 3, 4, 5}` to the client.
 
 For example, We set the IP address and port of server and client as follows.
 
@@ -37,11 +37,12 @@ TCP server
 
 #include "winsock2.h"
 
-#include "socketpp/socketpp.hpp"
+#include "socketpp.hpp"
 
 
 socketpp::Socket server(PF_INET, SOCK_STREAM);
 server.bind(server_ip, server_port);
+server.setsockopt(SOL_SOCKET, SO_REUSEADDR, true);
 server.listen(1);
 auto [client, address] = server.accept();
 
@@ -55,6 +56,8 @@ TCP client
 
 ```c++
 socketpp::Socket sock(PF_INET, SOCK_STREAM);
+sock.bind("0.0.0.0", 50000);
+sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, true);
 sock.connect(server_ip, server_port);
 
 sock.send(data);
@@ -68,6 +71,7 @@ UDP server
 ```c++
 socketpp::Socket server(PF_INET, SOCK_STREAM);
 server.bind(server_ip, server_port);
+server.setsockopt(SOL_SOCKET, SO_REUSEADDR, true);
 
 server.recv_from<size>();
 server.sendto(data, client_ip, client_port);
@@ -80,6 +84,7 @@ UDP client
 ```c++
 socketpp::Socket sock(PF_INET, SOCK_STREAM);
 sock.bind(client_ip, client_port);
+sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, true);
 
 sock.sendto(data, server_ip, server_port);
 sock.recv_from<size>();
