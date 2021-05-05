@@ -57,6 +57,11 @@ public:
 		this->_address_family = new_address_family;
 	}
 
+	unsigned long inet_addr() const noexcept
+	{
+		return ::inet_addr(this->_ip_address.data());
+	}
+
 private:
 	std::string_view _ip_address;
 	std::uint16_t _port;
