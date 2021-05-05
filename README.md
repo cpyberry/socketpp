@@ -37,7 +37,7 @@ TCP server
 
 #include "winsock2.h"
 
-#include "socketpp/socketpp.hpp"
+#include "socketpp.hpp"
 
 
 socketpp::Socket server(PF_INET, SOCK_STREAM);
