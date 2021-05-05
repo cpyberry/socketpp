@@ -24,6 +24,15 @@ github: https://github.com/cpyberry
 
 
 namespace socketpp {
+class Address
+{
+private:
+	std::string_view _ip_address;
+	std::uint16_t _port;
+	int _address_family;
+};
+
+
 class Socket
 {
 public:
