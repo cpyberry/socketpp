@@ -67,6 +67,15 @@ public:
 		return ::htons(this->_port);
 	}
 
+	sockaddr_in to_sockaddr_in() const noexcept
+	{
+		sockaddr_in address;
+		address.sin_addr.S_un.S_addr = this->inet_addr();
+		address.sin_family = this->address_family();
+		address.sin_port = this->htons();
+		return address;
+	}
+
 private:
 	std::string_view _ip_address;
 	std::uint16_t _port;
