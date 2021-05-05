@@ -55,6 +55,7 @@ TCP client
 
 ```c++
 socketpp::Socket sock(PF_INET, SOCK_STREAM);
+sock.bind("0.0.0.0", 50000);
 sock.connect(server_ip, server_port);
 
 sock.send(data);
