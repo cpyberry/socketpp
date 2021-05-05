@@ -26,6 +26,17 @@ github: https://github.com/cpyberry
 namespace socketpp {
 class Address
 {
+public:
+	std::string_view ip_address() const noexcept
+	{
+		return this->_ip_address;
+	}
+
+	void ip_address(const std::string_view& new_ip_address) noexcept
+	{
+		this->_ip_address = new_ip_address;
+	}
+
 private:
 	std::string_view _ip_address;
 	std::uint16_t _port;
