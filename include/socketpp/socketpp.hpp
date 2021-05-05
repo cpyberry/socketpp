@@ -27,6 +27,9 @@ namespace socketpp {
 class Address
 {
 public:
+	Address(const std::string_view& new_ip_address, const std::uint16_t& new_port, const int& new_address_family) :
+		_ip_address(new_ip_address), _port(new_port), _address_family(new_address_family) {}
+
 	std::string_view ip_address() const noexcept
 	{
 		return this->_ip_address;
