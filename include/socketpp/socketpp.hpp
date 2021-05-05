@@ -37,6 +37,16 @@ public:
 		this->_ip_address = new_ip_address;
 	}
 
+	std::uint16_t port() const noexcept
+	{
+		return this->_port;
+	}
+
+	void port(const std::uint16_t& new_port) noexcept
+	{
+		this->_port = new_port;
+	}
+
 private:
 	std::string_view _ip_address;
 	std::uint16_t _port;
