@@ -8,7 +8,7 @@ Simple and modern socket library for C++
 
 ## Usage
 
-When the server receives the message "cat" from the client and then sends the message "dog" to the client.
+When the server receives the message `{1, 2, 3, 4, 5}` from the client and then sends the message `{1, 2, 3, 4, 5}` to the client.
 
 For example, We set the IP address and port of server and client as follows.
 
