@@ -24,6 +24,68 @@ github: https://github.com/cpyberry
 
 
 namespace socketpp {
+class Address
+{
+public:
+	Address(const std::string_view& new_ip_address, const std::uint16_t& new_port, const int& new_address_family) :
+		_ip_address(new_ip_address), _port(new_port), _address_family(new_address_family) {}
+
+	std::string_view ip_address() const noexcept
+	{
+		return this->_ip_address;
+	}
+
+	void ip_address(const std::string_view& new_ip_address) noexcept
+	{
+		this->_ip_address = new_ip_address;
+	}
+
+	std::uint16_t port() const noexcept
+	{
+		return this->_port;
+	}
+
+	void port(const std::uint16_t& new_port) noexcept
+	{
+		this->_port = new_port;
+	}
+
+	int address_family() const noexcept
+	{
+		return this->_address_family;
+	}
+
+	void address_family(const int& new_address_family) noexcept
+	{
+		this->_address_family = new_address_family;
+	}
+
+	unsigned long inet_addr() const noexcept
+	{
+		return ::inet_addr(this->_ip_address.data());
+	}
+
+	unsigned short htons() const noexcept
+	{
+		return ::htons(this->_port);
+	}
+
+	sockaddr_in to_sockaddr_in() const noexcept
+	{
+		sockaddr_in address;
+		address.sin_addr.S_un.S_addr = this->inet_addr();
+		address.sin_family = this->address_family();
+		address.sin_port = this->htons();
+		return address;
+	}
+
+private:
+	std::string_view _ip_address;
+	std::uint16_t _port;
+	int _address_family;
+};
+
+
 class Socket
 {
 public:
