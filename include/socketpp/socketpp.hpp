@@ -62,6 +62,11 @@ public:
 		return ::inet_addr(this->_ip_address.data());
 	}
 
+	unsigned short htons() const noexcept
+	{
+		return ::htons(this->_port);
+	}
+
 private:
 	std::string_view _ip_address;
 	std::uint16_t _port;
