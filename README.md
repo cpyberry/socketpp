@@ -42,6 +42,7 @@ TCP server
 
 socketpp::Socket server(PF_INET, SOCK_STREAM);
 server.bind(server_ip, server_port);
+server.setsockopt(SOL_SOCKET, SO_REUSEADDR, true);
 server.listen(1);
 auto [client, address] = server.accept();
 
@@ -56,6 +57,7 @@ TCP client
 ```c++
 socketpp::Socket sock(PF_INET, SOCK_STREAM);
 sock.bind("0.0.0.0", 50000);
+sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, true);
 sock.connect(server_ip, server_port);
 
 sock.send(data);
@@ -69,6 +71,7 @@ UDP server
 ```c++
 socketpp::Socket server(PF_INET, SOCK_STREAM);
 server.bind(server_ip, server_port);
+server.setsockopt(SOL_SOCKET, SO_REUSEADDR, true);
 
 server.recv_from<size>();
 server.sendto(data, client_ip, client_port);
@@ -81,6 +84,7 @@ UDP client
 ```c++
 socketpp::Socket sock(PF_INET, SOCK_STREAM);
 sock.bind(client_ip, client_port);
+sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, true);
 
 sock.sendto(data, server_ip, server_port);
 sock.recv_from<size>();
