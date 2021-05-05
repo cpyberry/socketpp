@@ -50,6 +50,15 @@ public:
 		}
 	}
 
+	Socket(const Socket& sock)
+	{
+		this->sock = sock.sock;
+		this->address = sock.address;
+		this->protocol_family = sock.protocol_family;
+		this->cleanuped = sock.cleanuped;
+		this->wsa_data = this->_initial_wsadata();
+	}
+
 	void bind(const std::string_view& ip_address, const std::uint16_t& port)
 	{
 		this->_set_address(ip_address, port);
