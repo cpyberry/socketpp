@@ -99,11 +99,10 @@ public:
 		// When using this library, use this constructor.
 		this->wsa_data = this->_initial_wsadata();
 		this->sock = this->_create_socket(protocol_family, socket_type);
-		this->address = {};
 		this->cleanuped = false;
 	}
 
-	Socket(SOCKET&& sock, sockaddr_in&& address) : sock(sock), address(address)
+	Socket(SOCKET&& sock, Address&& address) : sock(sock), address(address)
 	{
 		// when creating a client socket object, use this constructor.
 		this->wsa_data = this->_initial_wsadata();
@@ -138,8 +137,9 @@ public:
 	void bind(const std::string_view& ip_address, const std::uint16_t& port)
 	{
 		this->_set_address(ip_address, port);
+		sockaddr_in server_address = this->address.to_sockaddr_in();
 
-		int result = ::bind(this->sock, reinterpret_cast<sockaddr*>(&this->address), sizeof(this->address));
+		int result = ::bind(this->sock, reinterpret_cast<sockaddr*>(&server_address), sizeof(this->address));
 		if (result == SOCKET_ERROR) {
 			winsock_error::throw_winsock_error();
 		}
@@ -148,8 +148,9 @@ public:
 	void connect(const std::string_view& ip_address, const std::uint16_t& port)
 	{
 		this->_set_address(ip_address, port);
+		sockaddr_in server_address = this->address.to_sockaddr_in();
 
-		int result = ::connect(this->sock, reinterpret_cast<sockaddr*>(&this->address), sizeof(this->address));
+		int result = ::connect(this->sock, reinterpret_cast<sockaddr*>(&server_address), sizeof(this->address));
 		if (result == SOCKET_ERROR) {
 			winsock_error::throw_winsock_error();
 		}
@@ -189,7 +190,7 @@ public:
 		throw std::invalid_argument("The buffer argument must be of type castable to const char* or an instance of a class with data and size member functions.");
 	}
 
-	std::pair<Socket, sockaddr_in> accept() const
+	std::pair<Socket, Address> accept() const
 	{
 		sockaddr_in client_address = {};
 		int size = static_cast<int>(sizeof(client_address));
@@ -217,7 +218,7 @@ public:
 	template <class BufferType>
 	int sendto(const BufferType& buffer, const std::string_view& ip_address, const std::uint16_t& port)
 	{
-		sockaddr_in address_to = this->_get_address(ip_address, port);
+		sockaddr_in address_to = this->_get_address(ip_address, port).to_sockaddr_in();
 		size_t size = sizeof(address_to);
 
 		int sended_size = ::sendto(
@@ -241,7 +242,7 @@ public:
 	}
 
 	template <int size>
-	std::pair<std::array<char, size>, sockaddr_in> recvfrom() const
+	std::pair<std::array<char, size>, Address> recvfrom() const
 	{
 		std::array<char, size> buffer;
 		sockaddr_in client_address;
@@ -276,7 +277,7 @@ public:
 private:
 	SOCKET sock;
 	WSADATA wsa_data;
-	sockaddr_in address;
+	Address address;
 	int protocol_family;
 	bool cleanuped;
 
@@ -299,12 +300,9 @@ private:
 		return sock;
 	}
 
-	sockaddr_in _get_address(const std::string_view& ip_address, const std::uint16_t& port) const noexcept
+	Address _get_address(const std::string_view& ip_address, const std::uint16_t& port) const noexcept
 	{
-		sockaddr_in address;
-		address.sin_addr.S_un.S_addr = ::inet_addr(ip_address.data());
-		address.sin_family = this->protocol_family;
-		address.sin_port = ::htons(port);
+		Address address(ip_address, port, this->protocol_family);
 		return address;
 	}
 
