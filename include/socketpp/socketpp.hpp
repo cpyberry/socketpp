@@ -30,6 +30,11 @@ public:
 	Address(const std::string_view& new_ip_address, const std::uint16_t& new_port, const int& new_address_family) :
 		_ip_address(new_ip_address), _port(new_port), _address_family(new_address_family) {}
 
+	Address(const sockaddr_in& new_address) :
+		Address(::inet_ntoa(new_address.sin_addr), ::ntohs(new_address.sin_port), new_address.sin_family) {}
+
+	Address() = default;
+
 	std::string_view ip_address() const noexcept
 	{
 		return this->_ip_address;
