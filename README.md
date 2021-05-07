@@ -46,6 +46,10 @@ server.setsockopt(SOL_SOCKET, SO_REUSEADDR, true);
 server.listen(1);
 auto [client, address] = server.accept();
 
+// client ip address and port
+std::cout << address.ip_address() << std::endl;
+std::cout << address.port() << std::endl;
+
 std::array<char, size> recved_data = client.recv<size>();
 int sended_size = client.send(data);
 
