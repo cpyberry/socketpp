@@ -77,8 +77,11 @@ socketpp::Socket server(PF_INET, SOCK_STREAM);
 server.bind(server_ip, server_port);
 server.setsockopt(SOL_SOCKET, SO_REUSEADDR, true);
 
-server.recv_from<size>();
-server.sendto(data, client_ip, client_port);
+const auto [buffer, address] = server.recv_from<size>();
+
+// The next two lines have the same meaning.
+//server.sendto(data, client_ip, client_port);
+server.sendto(data, address);
 
 server.close();
 ```
