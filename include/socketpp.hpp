@@ -21,7 +21,7 @@ namespace socketpp_info {
 	constexpr std::string_view copyright = "Copyright 2021 cpyberry";
 	constexpr std::string_view url = "https://github.com/cpyberry/socketpp";
 	constexpr std::string_view license = "Apache-2.0 License";
-	constexpr std::string_view version = "1.0.0";
+	constexpr std::string_view version = "2.0.0";
 	constexpr std::string_view author = "cpyberry";
 	constexpr std::string_view author_email = "cpyberry222@gmail.com";
 }  // namespace socketpp_info
