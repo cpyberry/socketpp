@@ -161,6 +161,11 @@ public:
 		}
 	}
 
+	void connect(const Address& connect_address)
+	{
+		this->connect(connect_address.ip_address(), connect_address.port());
+	}
+
 	void listen(const int& backlog) const
 	{
 		int result = ::listen(this->sock, backlog);
