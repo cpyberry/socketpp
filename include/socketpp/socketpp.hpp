@@ -240,6 +240,13 @@ public:
 		return sended_size;
 	}
 
+	template <class BufferType>
+	int sendto(const BufferType& buffer, const Address& sendto_address)
+	{
+		int sended_size = this->sendto(buffer, sendto_address.ip_address(), sendto_address.port());
+		return sended_size;
+	}
+
 	template <int size>
 	std::array<char, size> recv() const
 	{
