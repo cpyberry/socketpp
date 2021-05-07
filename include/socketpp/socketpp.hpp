@@ -145,6 +145,11 @@ public:
 		}
 	}
 
+	void bind(const Address& bind_address)
+	{
+		this->bind(bind_address.ip_address(), bind_address.port());
+	}
+
 	void connect(const std::string_view& ip_address, const std::uint16_t& port)
 	{
 		this->_set_address(ip_address, port);
@@ -154,6 +159,11 @@ public:
 		if (result == SOCKET_ERROR) {
 			winsock_error::throw_winsock_error();
 		}
+	}
+
+	void connect(const Address& connect_address)
+	{
+		this->connect(connect_address.ip_address(), connect_address.port());
 	}
 
 	void listen(const int& backlog) const
@@ -227,6 +237,13 @@ public:
 		if (sended_size == SOCKET_ERROR) {
 			winsock_error::throw_winsock_error();
 		}
+		return sended_size;
+	}
+
+	template <class BufferType>
+	int sendto(const BufferType& buffer, const Address& sendto_address)
+	{
+		int sended_size = this->sendto(buffer, sendto_address.ip_address(), sendto_address.port());
 		return sended_size;
 	}
 
