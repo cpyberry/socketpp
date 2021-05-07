@@ -145,6 +145,11 @@ public:
 		}
 	}
 
+	void bind(const Address& bind_address)
+	{
+		this->bind(bind_address.ip_address(), bind_address.port());
+	}
+
 	void connect(const std::string_view& ip_address, const std::uint16_t& port)
 	{
 		this->_set_address(ip_address, port);
