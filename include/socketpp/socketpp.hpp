@@ -102,7 +102,7 @@ public:
 		this->cleanuped = false;
 	}
 
-	Socket(SOCKET&& sock, Address&& address) : sock(sock), address(address)
+	Socket(const SOCKET& sock, const Address& address) : sock(sock), address(address)
 	{
 		// when creating a client socket object, use this constructor.
 		this->wsa_data = this->_initial_wsadata();
@@ -211,7 +211,7 @@ public:
 			winsock_error::throw_winsock_error();
 		}
 
-		Socket client(std::move(client_sock), std::move(client_address));
+		Socket client(std::move(client_sock), client_address);
 		return std::make_pair(client, client_address);
 	}
 
