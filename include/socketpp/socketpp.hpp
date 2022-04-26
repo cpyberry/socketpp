@@ -27,12 +27,12 @@ namespace socketpp {
 class Address
 {
 public:
-	Address(const std::string_view& new_ip_address,
+	explicit Address(const std::string_view& new_ip_address,
 		const std::uint16_t& new_port, const int& new_address_family) :
 			_ip_address(new_ip_address), _port(new_port),
 			_address_family(new_address_family) {}
 
-	Address(const sockaddr_in& new_address) :
+	explicit Address(const sockaddr_in& new_address) :
 		Address(::inet_ntoa(new_address.sin_addr),
 		::ntohs(new_address.sin_port), new_address.sin_family) {}
 
@@ -97,7 +97,7 @@ private:
 class Socket
 {
 public:
-	Socket(const int& protocol_family, const int& socket_type) :
+	explicit Socket(const int& protocol_family, const int& socket_type) :
 		protocol_family(protocol_family)
 	{
 		// When using this library, use this constructor.
@@ -106,7 +106,7 @@ public:
 		this->cleanuped = false;
 	}
 
-	Socket(SOCKET&& sock, Address&& address) :
+	explicit Socket(SOCKET&& sock, const Address& address) :
 		sock(sock), address(address)
 	{
 		// when creating a client socket object, use this constructor.
@@ -121,7 +121,7 @@ public:
 		}
 	}
 
-	Socket(const Socket& sock)
+	explicit Socket(const Socket& sock)
 	{
 		this->sock = sock.sock;
 		this->address = sock.address;
@@ -130,7 +130,7 @@ public:
 		this->wsa_data = this->_initial_wsadata();
 	}
 
-	Socket(Socket&& sock)
+	explicit Socket(Socket&& sock)
 	{
 		this->sock = std::move(sock.sock);
 		this->address = std::move(sock.address);
@@ -227,8 +227,9 @@ public:
 			winsock_error::throw_winsock_error();
 		}
 
-		Socket client(std::move(client_sock), std::move(client_address));
-		return std::make_pair(client, client_address);
+		Address address(client_address);
+		Socket client(std::move(client_sock), address);
+		return std::make_pair(client, address);
 	}
 
 	template <class BufferType>
