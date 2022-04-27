@@ -32,9 +32,9 @@ public:
 			_ip_address(new_ip_address), _port(new_port),
 			_address_family(new_address_family) {}
 
-	explicit Address(const sockaddr_in& new_address) :
-		Address(::inet_ntoa(new_address.sin_addr),
-		::ntohs(new_address.sin_port), new_address.sin_family) {}
+	explicit Address(sockaddr_in&& new_address) :
+		Address(::inet_ntoa(std::move(new_address.sin_addr)),
+		::ntohs(std::move(new_address.sin_port)), std::move(new_address.sin_family)) {}
 
 	Address() = default;
 
@@ -227,7 +227,7 @@ public:
 			winsock_error::throw_winsock_error();
 		}
 
-		Address address(client_address);
+		Address address(std::move(client_address));
 		Socket client(std::move(client_sock), address);
 		return std::make_pair(client, address);
 	}
